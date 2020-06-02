@@ -1,8 +1,13 @@
-const notificationElement=document.querySelector(".notification");
+//Select elements
 const iconElement=document.querySelector(".weather-icon");
 const tempElement=document.querySelector(".temperature-value p");
 const descElement=document.querySelector(".temperature-description p");
-const location=document.querySelector(".location p");
+const locationElement=document.querySelector(".location p");
+const notificationElement=document.querySelector(".notification");
+
+//API key: 672a1acbfbd8f8852bd51abc05329ca8
+const KELVIN=273;
+const key=672a1acbfbd8f8852bd51abc05329ca8;
 
 /*const weather={
   temperature: {
@@ -15,16 +20,22 @@ const location=document.querySelector(".location p");
   country: "GB"
 };*/
 
+//Weather object
+const weather={};
+weather.temperature={
+  unit: "celsius"
+}
+
 //First check if the location is available
 if('geolocation' in navigator){
   navigator.geolocation.getCurrentPosition(setPosition, showError);
 }else {
   notificationElement.style.display="block";
-  notificationElement.innerHTML="<p>Browser doesn't support Geolocation</p>"";
+  notificationElement.innerHTML="<p>Browser doesn't support Geolocation</p>";
 }
 
 //Set the current location
-fucntion setPosition(position){
+function setPosition(position){
   let latitude=position.coords.latitude;
   let longitude=position.coords.longitude;
 
@@ -36,6 +47,24 @@ fucntion setPosition(position){
 function showError(error){
   notificationElement.style.display="block";
   notificationElement.innerHTML=`<p> ${error.message} </p>`;
+}
+
+function getWeather(latitude, longitude){
+  let api=`http://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${key}`;
+  fetch(api).then(function(response){
+    let data=response.json();
+    return data;
+  })
+  .then(function(data){
+    weather.temperature.value=Math.floor(data.main.temp - KELVIN);
+    weather.description=data.weather[0].description;
+    weather.iconId=data.weather[0].icon;
+    weather.city=data.name;
+    weather.country=data.sys.country;
+  })
+  .then(function()){
+    displayWeather();
+  }
 }
 
 //Convert C to F
