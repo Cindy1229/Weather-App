@@ -7,7 +7,7 @@ const notificationElement=document.querySelector(".notification");
 
 //API key: 672a1acbfbd8f8852bd51abc05329ca8
 const KELVIN=273;
-const key=672a1acbfbd8f8852bd51abc05329ca8;
+const key="672a1acbfbd8f8852bd51abc05329ca8";
 
 /*const weather={
   temperature: {
@@ -49,6 +49,7 @@ function showError(error){
   notificationElement.innerHTML=`<p> ${error.message} </p>`;
 }
 
+//Get weather info from the API
 function getWeather(latitude, longitude){
   let api=`http://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${key}`;
   fetch(api).then(function(response){
@@ -65,6 +66,14 @@ function getWeather(latitude, longitude){
   .then(function()){
     displayWeather();
   }
+}
+
+//Display the weather info to UI
+function displayWeather(){
+  iconElement.innerHTML=`<img src="icons/${weather.iconId}.png"/>`;
+  tempElement.innerHTML=`${weather.temperature.value}° <span> C</span> `;
+  descElement.innerHTML=weather.description;
+  locationElement.innerHTML=`${weather.city}, ${weather.country}`;
 }
 
 //Convert C to F
