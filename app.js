@@ -63,9 +63,9 @@ function getWeather(latitude, longitude){
     weather.city=data.name;
     weather.country=data.sys.country;
   })
-  .then(function()){
+  .then(function(){
     displayWeather();
-  }
+  })
 }
 
 //Display the weather info to UI
